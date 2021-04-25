@@ -1,6 +1,6 @@
-import {Component, ViewChild, Input, Output, OnDestroy} from '@angular/core';
+import {Component, ViewChild, EventEmitter, Output, OnDestroy} from '@angular/core';
 import {Calendar} from '@fullcalendar/core';
-import {EventSourceInput} from '@fullcalendar/common';
+import {EventSourceInput, EventClickArg, DatesSetArg} from '@fullcalendar/common';
 import {CalendarOptions, FullCalendarComponent} from '@fullcalendar/angular';
 import {Observable, Subject, Subscription} from "rxjs";
 import {filter} from "rxjs/operators";
@@ -17,8 +17,8 @@ export class CalendarComponent implements OnDestroy {
 
     get calendar(): Calendar {return this.calendarObject.getApi()};
 
-    @Input('eventClick') eventClicked: (info) => void;
-    @Input('datesSet') datesSet: (arg) => void;
+    @Output('eventClick') eventClicked: EventEmitter<EventClickArg> = new EventEmitter<EventClickArg>();
+    @Output('datesSet') datesSet: EventEmitter<DatesSetArg> = new EventEmitter<DatesSetArg>();
     changeSubject: Subject<void> = new Subject<void>();
     @Output('change') change: Observable<void> = this.changeSubject.asObservable();
     private _source: EventSourceInput = {events: []}
@@ -46,11 +46,12 @@ export class CalendarComponent implements OnDestroy {
             month: 'Mese',
             week : 'Settimana',
             day  : 'Giorno'
-        }
+        },
+        eventClick: arg => this.eventClicked.emit(arg),
+        datesSet: arg => this.datesSet.emit(arg)
     };
 
     constructor() {
-        this.options.eventClick = this.eventClicked;
         this.subscriptions.push(this.change.pipe(filter(() => !!this.calendar)).subscribe(() => {
             this.calendar.removeAllEventSources();
             this.calendar.addEventSource(this._source);
