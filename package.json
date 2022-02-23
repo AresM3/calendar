@@ -1,6 +1,6 @@
 {
   "name": "@m3team/calendar",
-  "version": "0.0.2-dev",
+  "version": "1.0.0",
   "peerDependencies": {
     "@angular/common": "^11.2.7",
     "@angular/core": "^11.2.7",
@@ -26,8 +26,5 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0"
-  },
-  "publishConfig": {
-    "registry": "http://152.228.160.213:4873"
   }
 }
